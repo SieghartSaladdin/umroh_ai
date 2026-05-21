@@ -39,7 +39,7 @@ ai-umroh/
 ├── requirements.txt        # Flat package dependencies (extremely simple to debug)
 ├── blueprint_ai_umroh.md    # System interaction blueprints
 ├── use_case_umroh_ai.md     # Chat simulation and scenarios
-└── agent.md                # This rules file
+└── agent.md            # This rules file
 ```
 
 ---
@@ -61,56 +61,14 @@ To maintain absolute environment predictability and frictionless debugging, alwa
 
 ---
 
-## 3. 4-SUBAGENT DELEGATION STRATEGY (HIGH-FOCUS DEV)
+## 3. DYNAMIC SUBAGENT DELEGATION STRATEGY (SINGLE-FEATURE FOCUS)
 
-To ensure rapid, parallel development without context rot or overlapping scopes, tasks are strictly partitioned among **four (4) hyper-focused subagents**. Each agent handles exactly **one** distinct feature layer.
+To ensure rapid, parallel development without context rot or overlapping scopes, the project utilizes **dynamic, user-requested subagents** governed by a strict single-focus rule:
 
-```mermaid
-graph TD
-    A[Primary Agent / Architect] --> B[Subagent 1: DB & Env Engineer]
-    A --> C[Subagent 2: PDF Layout Designer]
-    A --> D[Subagent 3: WA Gateway Integrator]
-    A --> E[Subagent 4: LangGraph Brain Architect]
-    
-    B -->|Schema & CRUD| F[(Database Layer)]
-    C -->|gorgeous INV-xxxx.pdf| G[PDF Module]
-    D -->|Media / Document API| H[WA Gateway]
-    E -->|Interrupts / State Machine| I[LangGraph Core]
-```
-
-### 🤖 Subagent 1: Environment & Database Engineer
-* **Scope**: Feature 1 (Database & Persistence Layer) and environment initialization.
-* **Primary Responsibilities**:
-  1. Set up the local virtual environment (`.venv`) and the base `requirements.txt` file.
-  2. Implement local SQLite configurations using `SQLAlchemy` or `SQLModel`.
-  3. Code the `Jemaah` and `Booking` database models.
-  4. Write clean repository functions (`get_or_create_jemaah`, `create_booking`, `update_booking_proof`, `verify_payment`).
-  5. Provide a standalone database seeding script.
-
-### 🤖 Subagent 2: Premium PDF Invoice Specialist
-* **Scope**: Feature 5 (Premium PDF Invoice Generator).
-* **Primary Responsibilities**:
-  1. Build the standalone `pdf_generator.py` module inside `ai_umroh/utils/`.
-  2. Code a highly aesthetic, premium invoice layout using a robust Python PDF library (e.g., `ReportLab`, `fpdf2`, or HTML-to-PDF).
-  3. Ensure it dynamically parses details (invoice ID, pilgrim manifest, total bill with unique 3-digit code, PT bank info).
-  4. Build a local execution script to test and save dummy PDF invoices for manual verification.
-
-### 🤖 Subagent 3: WhatsApp Gateway Integrator
-* **Scope**: Feature 2 (WhatsApp Gateway & Media Routing).
-* **Primary Responsibilities**:
-  1. Establish WhatsApp connectivity logic (using the specified API wrapper/SDK).
-  2. Implement the QR-code pairing hook and stable session persistence.
-  3. Code the incoming message parser (routing text to the AI and identifying incoming media files as payment proofs).
-  4. Code the document-sender utility to upload generated PDFs and deliver them directly into the WhatsApp thread.
-
-### 🤖 Subagent 4: LangGraph Stateful Brain Architect
-* **Scope**: Feature 3 & Feature 6 (LangGraph State, Persona Prompting, and Mute Breakpoint).
-* **Primary Responsibilities**:
-  1. Establish the graph schema and annotation rules in `state.py`.
-  2. Code the Salsa prompt system, including exact guardrails and objection-handling nodes in `nodes.py`.
-  3. Build the core transition mapping in `edges.py` and graph compilation in `agent.py`.
-  4. **Strict Interrupt Setup**: Configure LangGraph's native checkpointers and **breakpoints** (`interrupt_before=["verify_payment"]`). When `payment_status` changes to `WAITING_VERIFY`, the graph must halt execution, muting the bot to incoming messages.
-  5. Provide the API/CLI hooks for human-in-the-loop resumption.
+### ⚠️ The Strict Single-Feature Rule
+* **No Multi-tasking**: No single subagent (and not the main agent) is allowed to work on multiple features or a massive set of tasks (e.g., trying to implement 5 features directly) at the same time.
+* **Dynamic Scoping**: You can spawn as many subagents as the user asks for, but each active agent **must remain strictly focused on one (1) single feature or task** at a time.
+* **Verification Before Transition**: A subagent's feature must be 100% complete, tested, and approved before moving to a new task or spawning another subagent.
 
 ---
 
