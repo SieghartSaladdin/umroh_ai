@@ -25,10 +25,17 @@ __pycache__/
 # Output and Log files
 *.log
 logs/
-*.pdf
 temp/
 tmp/
 dist/
 build/
 *.egg-info/
 .langgraph/
+
+# Generated files (keep folder structure via .gitkeep)
+ai_umroh/static/invoices/*.pdf
+scratch/*.pdf
+uploads/
+
+# SQLite database (generated at runtime)
+database.db

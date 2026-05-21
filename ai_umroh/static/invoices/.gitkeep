@@ -1,0 +1,2 @@
+# This file keeps the invoices/ directory tracked by git.
+# Generated PDF invoices (*.pdf) are ignored via .gitignore.
